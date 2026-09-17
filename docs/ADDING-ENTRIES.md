@@ -86,9 +86,10 @@ npm run build
 npm run preview
 ```
 
-Check Home, `/features` or `/templates`, and `/entries/<id>` — tabs + Copiar for Astro, Next.js, and Prompt.
+Open `/features` or `/templates`, click a card to open the **modal**, use the Copy dropdown for Astro / Next.js / Prompt. Deep-link `/entries/<id>` should open the same modal.
 
 ## Shell UX notes
 
 - Light theme is default; dark mode toggles via the header (persisted).
-- Do not treat the site as a dark-only docs catalog — galleries should feel browsable like a component marketplace.
+- Galleries use a dense 3-column preview grid (21st.dev-like scanning).
+- Detail is a modal overlay with floating Copy control — not a long docs page.

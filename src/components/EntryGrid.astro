@@ -1,13 +1,24 @@
 ---
 import EntryCard from "./EntryCard.astro";
+import EntryModal from "./EntryModal.astro";
 import type { LearningEntry } from "../lib/types";
 
 interface Props {
   entries: LearningEntry[];
   emptyLabel?: string;
+  returnHref?: string;
+  initialId?: string;
+  /** Show modal chrome for this gallery */
+  withModal?: boolean;
 }
 
-const { entries, emptyLabel = "Aún no hay entradas en esta galería." } = Astro.props;
+const {
+  entries,
+  emptyLabel = "Aún no hay entradas en esta galería.",
+  returnHref = "/",
+  initialId,
+  withModal = true,
+} = Astro.props;
 ---
 
 {
@@ -16,10 +27,19 @@ const { entries, emptyLabel = "Aún no hay entradas en esta galería." } = Astro
       {emptyLabel}
     </p>
   ) : (
-    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {entries.map((entry) => (
-        <EntryCard entry={entry} />
-      ))}
-    </div>
+    <>
+      <div class="gallery-grid grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+        {entries.map((entry) => (
+          <EntryCard entry={entry} openInModal={withModal} />
+        ))}
+      </div>
+      {withModal && (
+        <EntryModal
+          entries={entries}
+          initialId={initialId}
+          returnHref={returnHref}
+        />
+      )}
+    </>
   )
 }

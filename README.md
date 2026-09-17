@@ -52,10 +52,11 @@ npm run preview  # preview the production build
 
 ## Browse
 
-- `/` — landing (hero + nav + featured sections)
-- `/features` — Features gallery
-- `/templates` — Templates gallery
-- `/entries/[id]` — detail: preview + copy Astro / Next.js / Prompt
+- `/` — landing + teaser grids
+- `/features` — dense Features gallery (3-col preview cards)
+- `/templates` — dense Templates gallery
+- Click a card → **detail modal** (blurred backdrop, preview, Copy Astro / Next.js / Prompt)
+- `/entries/[id]` — deep link opens the same modal chrome over the gallery
 
 ## Add a learning
 

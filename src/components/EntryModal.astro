@@ -1,0 +1,636 @@
+---
+import type { LearningEntry } from "../lib/types";
+import { CATEGORY_LABELS } from "../lib/types";
+import EntryPreview from "./EntryPreview.astro";
+
+interface Props {
+  entries: LearningEntry[];
+  /** Open this entry immediately (deep-link /entries/[id]) */
+  initialId?: string;
+  /** Gallery to return to when closing */
+  returnHref?: string;
+}
+
+const { entries, initialId, returnHref = "/" } = Astro.props;
+
+const payload = entries.map((e) => ({
+  id: e.id,
+  title: e.title,
+  category: e.category,
+  categoryLabel: CATEGORY_LABELS[e.category],
+  kind: e.kind,
+  codeAstro: e.code.astro,
+  codeNext: e.code.next,
+  prompt: e.prompt,
+}));
+---
+
+{
+  entries.length > 0 && (
+    <div
+      class="entry-modal-root"
+      data-entry-modal-root
+      data-return-href={returnHref}
+      data-initial-id={initialId ?? ""}
+      hidden={!initialId}
+    >
+      <div class="entry-modal-backdrop" data-modal-backdrop></div>
+
+      <button
+        type="button"
+        class="entry-modal-nav entry-modal-nav--prev"
+        data-modal-prev
+        aria-label="Anterior"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M15 18l-6-6 6-6"></path>
+        </svg>
+      </button>
+      <button
+        type="button"
+        class="entry-modal-nav entry-modal-nav--next"
+        data-modal-next
+        aria-label="Siguiente"
+      >
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 18l6-6-6-6"></path>
+        </svg>
+      </button>
+
+      <div
+        class="entry-modal-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="entry-modal-title"
+        data-modal-dialog
+      >
+        <div class="entry-modal-top">
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-[#64748b]" data-modal-category></span>
+            <button
+              type="button"
+              class="entry-modal-icon-btn"
+              data-modal-close
+              aria-label="Cerrar"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 6L6 18M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="flex items-center gap-1">
+            <a
+              class="entry-modal-icon-btn"
+              data-modal-open-tab
+              href="#"
+              target="_blank"
+              rel="noopener"
+              aria-label="Abrir en nueva pestaña"
+              title="Abrir en nueva pestaña"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <path d="M15 3h6v6"></path>
+                <path d="M10 14L21 3"></path>
+              </svg>
+            </a>
+            <button
+              type="button"
+              class="entry-modal-icon-btn"
+              data-modal-copy-link
+              aria-label="Copiar enlace"
+              title="Copiar enlace"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+              </svg>
+            </button>
+            <button
+              type="button"
+              class="entry-modal-icon-btn"
+              data-modal-save-stub
+              aria-label="Guardar (próximamente)"
+              title="Guardar (próximamente)"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <h2 id="entry-modal-title" class="sr-only" data-modal-title></h2>
+
+        <div class="entry-modal-preview-wrap" data-modal-preview-host>
+          {
+            entries.map((entry) => (
+              <div
+                class="entry-modal-preview"
+                data-preview-for={entry.id}
+                hidden
+              >
+                <EntryPreview preview={entry.preview} />
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="entry-modal-actionbar" data-copy-menu-root>
+          <button type="button" class="entry-modal-ghost-btn" data-modal-remix-stub title="Remix (próximamente)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"></path>
+              <path d="M19 14l.8 2.2L22 17l-2.2.8L19 20l-.8-2.2L16 17l2.2-.8L19 14z"></path>
+            </svg>
+            Remix
+          </button>
+          <button type="button" class="entry-modal-ghost-btn" data-modal-save-stub title="Guardar (próximamente)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Save
+          </button>
+
+          <div class="entry-modal-copy-group">
+            <button type="button" class="entry-modal-copy-main" data-copy-primary>
+              Copiar código
+            </button>
+            <button
+              type="button"
+              class="entry-modal-copy-caret"
+              data-copy-menu-toggle
+              aria-haspopup="menu"
+              aria-expanded="false"
+              aria-label="Elegir qué copiar"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 9l6 6 6-6"></path>
+              </svg>
+            </button>
+            <div class="entry-modal-copy-menu" data-copy-menu hidden role="menu">
+              <button type="button" role="menuitem" data-copy-choice="astro">Código Astro</button>
+              <button type="button" role="menuitem" data-copy-choice="next">Código Next.js</button>
+              <button type="button" role="menuitem" data-copy-choice="prompt">Prompt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <textarea class="sr-only" aria-hidden="true" data-entries-json-text readonly>{JSON.stringify(payload)}</textarea>
+    </div>
+  )
+}
+
+<style>
+  .entry-modal-root {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.25rem;
+  }
+
+  .entry-modal-root[hidden] {
+    display: none !important;
+  }
+
+  .entry-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .entry-modal-dialog {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    width: min(1100px, calc(100vw - 2rem));
+    max-height: calc(100vh - 2.5rem);
+    overflow: hidden;
+    border-radius: 1.25rem;
+    background: #fff;
+    box-shadow: 0 30px 80px -24px rgba(15, 23, 42, 0.55);
+  }
+
+  :global(html.dark) .entry-modal-dialog {
+    background: #121826;
+    color: #e8eef6;
+  }
+
+  .entry-modal-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.85rem 1rem 0.35rem;
+  }
+
+  .entry-modal-icon-btn {
+    display: inline-flex;
+    height: 2rem;
+    width: 2rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .entry-modal-icon-btn:hover {
+    background: rgba(15, 23, 42, 0.06);
+    color: #0f172a;
+  }
+
+  :global(html.dark) .entry-modal-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #e8eef6;
+  }
+
+  .entry-modal-preview-wrap {
+    position: relative;
+    flex: 1;
+    overflow: auto;
+    padding: 0.5rem 1rem 5.5rem;
+  }
+
+  .entry-modal-preview[hidden] {
+    display: none !important;
+  }
+
+  .entry-modal-actionbar {
+    position: absolute;
+    left: 50%;
+    bottom: 1.1rem;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    transform: translateX(-50%);
+    padding: 0.35rem;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.92);
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
+  }
+
+  .entry-modal-ghost-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: none;
+    border-radius: 999px;
+    background: transparent;
+    color: #e2e8f0;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .entry-modal-ghost-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .entry-modal-copy-group {
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    margin-left: 0.15rem;
+  }
+
+  .entry-modal-copy-main {
+    border: none;
+    border-radius: 999px 0 0 999px;
+    background: #3b82f6;
+    color: #fff;
+    padding: 0.55rem 0.95rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .entry-modal-copy-main:hover {
+    background: #2563eb;
+  }
+
+  .entry-modal-copy-caret {
+    border: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 0 999px 999px 0;
+    background: #3b82f6;
+    color: #fff;
+    padding: 0 0.65rem;
+    cursor: pointer;
+  }
+
+  .entry-modal-copy-caret:hover {
+    background: #2563eb;
+  }
+
+  .entry-modal-copy-menu {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 0.5rem);
+    min-width: 11rem;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background: #0f172a;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
+  }
+
+  .entry-modal-copy-menu button {
+    display: block;
+    width: 100%;
+    border: none;
+    background: transparent;
+    color: #e2e8f0;
+    text-align: left;
+    padding: 0.65rem 0.85rem;
+    font-size: 0.8125rem;
+    cursor: pointer;
+  }
+
+  .entry-modal-copy-menu button:hover {
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .entry-modal-nav {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+    display: inline-flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    transform: translateY(-50%);
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.55);
+    color: #0f172a;
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+
+  .entry-modal-nav:hover {
+    background: rgba(255, 255, 255, 0.85);
+  }
+
+  .entry-modal-nav--prev {
+    left: 0.75rem;
+  }
+
+  .entry-modal-nav--next {
+    right: 0.75rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 768px) {
+    .entry-modal-nav {
+      display: none;
+    }
+
+    .entry-modal-copy-main {
+      font-size: 0.75rem;
+      padding-inline: 0.75rem;
+    }
+  }
+</style>
+
+<script>
+  type EntryPayload = {
+    id: string;
+    title: string;
+    category: string;
+    categoryLabel: string;
+    kind: string;
+    codeAstro: string;
+    codeNext: string;
+    prompt: string;
+  };
+
+  function showToast(message: string) {
+    const existing = document.querySelector("[data-toast]");
+    existing?.remove();
+    const el = document.createElement("div");
+    el.setAttribute("data-toast", "");
+    el.textContent = message;
+    el.style.cssText =
+      "position:fixed;bottom:1.25rem;right:1.25rem;z-index:80;background:var(--surface);border:1px solid var(--border);color:var(--foreground);padding:0.75rem 1rem;border-radius:0.5rem;font-size:0.875rem;box-shadow:0 8px 24px rgb(0 0 0 / 0.12);";
+    document.body.appendChild(el);
+    window.setTimeout(() => el.remove(), 2200);
+  }
+
+  function initModalRoot(root: HTMLElement) {
+    const jsonEl = root.querySelector("[data-entries-json-text]");
+    if (!jsonEl || !("value" in jsonEl)) return;
+    const raw = (jsonEl as HTMLTextAreaElement).value;
+    if (!raw) return;
+
+    const entries = JSON.parse(raw) as EntryPayload[];
+    if (!entries.length) return;
+
+    const returnHref = root.dataset.returnHref || "/";
+    let index = Math.max(
+      0,
+      entries.findIndex((e) => e.id === root.dataset.initialId),
+    );
+    let copyTarget: "astro" | "next" | "prompt" = "astro";
+    let menuOpen = false;
+
+    const dialog = root.querySelector("[data-modal-dialog]");
+    const categoryEl = root.querySelector("[data-modal-category]");
+    const titleEl = root.querySelector("[data-modal-title]");
+    const openTab = root.querySelector<HTMLAnchorElement>("[data-modal-open-tab]");
+    const copyMain = root.querySelector<HTMLButtonElement>("[data-copy-primary]");
+    const menu = root.querySelector<HTMLElement>("[data-copy-menu]");
+    const menuToggle = root.querySelector<HTMLButtonElement>("[data-copy-menu-toggle]");
+    const previews = root.querySelectorAll<HTMLElement>("[data-preview-for]");
+
+    const labels = {
+      astro: "Copiar Astro",
+      next: "Copiar Next.js",
+      prompt: "Copiar prompt",
+    } as const;
+
+    function current() {
+      return entries[index]!;
+    }
+
+    function setCopyLabel() {
+      if (copyMain) copyMain.textContent = labels[copyTarget];
+    }
+
+    function syncPreview() {
+      const entry = current();
+      if (categoryEl) categoryEl.textContent = entry.categoryLabel.toLowerCase();
+      if (titleEl) titleEl.textContent = entry.title;
+      if (openTab) openTab.href = `/entries/${entry.id}`;
+      previews.forEach((node) => {
+        node.hidden = node.dataset.previewFor !== entry.id;
+      });
+      setCopyLabel();
+    }
+
+    function open(id?: string, push = true) {
+      if (id) {
+        const next = entries.findIndex((e) => e.id === id);
+        if (next >= 0) index = next;
+      }
+      root.hidden = false;
+      document.body.style.overflow = "hidden";
+      syncPreview();
+      if (push) {
+        const url = `/entries/${current().id}`;
+        if (window.location.pathname !== url) {
+          history.pushState({ entryModal: true, id: current().id }, "", url);
+        }
+      }
+    }
+
+    function close(navigateHome = true) {
+      root.hidden = true;
+      document.body.style.overflow = "";
+      menuOpen = false;
+      if (menu) menu.hidden = true;
+      if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
+      if (navigateHome) {
+        const path = window.location.pathname;
+        if (path.startsWith("/entries/")) {
+          history.pushState({}, "", returnHref);
+        }
+      }
+    }
+
+    function step(delta: number) {
+      index = (index + delta + entries.length) % entries.length;
+      syncPreview();
+      history.replaceState({ entryModal: true, id: current().id }, "", `/entries/${current().id}`);
+    }
+
+    async function copyValue(kind: "astro" | "next" | "prompt") {
+      const entry = current();
+      const value =
+        kind === "astro"
+          ? entry.codeAstro
+          : kind === "next"
+            ? entry.codeNext
+            : entry.prompt;
+      try {
+        await navigator.clipboard.writeText(value);
+        showToast("Copiado al portapapeles");
+      } catch {
+        showToast("No se pudo copiar");
+      }
+    }
+
+    root.querySelector("[data-modal-backdrop]")?.addEventListener("click", () => close());
+    root.querySelectorAll("[data-modal-close]").forEach((btn) => {
+      btn.addEventListener("click", () => close());
+    });
+    root.querySelector("[data-modal-prev]")?.addEventListener("click", () => step(-1));
+    root.querySelector("[data-modal-next]")?.addEventListener("click", () => step(1));
+
+    root.querySelector("[data-modal-copy-link]")?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(
+          `${window.location.origin}/entries/${current().id}`,
+        );
+        showToast("Enlace copiado");
+      } catch {
+        showToast("No se pudo copiar");
+      }
+    });
+
+    root.querySelectorAll("[data-modal-save-stub], [data-modal-remix-stub]").forEach((btn) => {
+      btn.addEventListener("click", () => showToast("Próximamente"));
+    });
+
+    copyMain?.addEventListener("click", () => copyValue(copyTarget));
+
+    menuToggle?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      menuOpen = !menuOpen;
+      if (menu) menu.hidden = !menuOpen;
+      menuToggle.setAttribute("aria-expanded", String(menuOpen));
+    });
+
+    menu?.querySelectorAll<HTMLButtonElement>("[data-copy-choice]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const choice = btn.dataset.copyChoice as "astro" | "next" | "prompt";
+        copyTarget = choice;
+        setCopyLabel();
+        menuOpen = false;
+        if (menu) menu.hidden = true;
+        menuToggle?.setAttribute("aria-expanded", "false");
+        await copyValue(choice);
+      });
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!menuOpen) return;
+      const target = event.target as Node;
+      if (!root.querySelector("[data-copy-menu-root]")?.contains(target)) {
+        menuOpen = false;
+        if (menu) menu.hidden = true;
+        menuToggle?.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (root.hidden) return;
+      if (event.key === "Escape") close();
+      if (event.key === "ArrowLeft") step(-1);
+      if (event.key === "ArrowRight") step(1);
+    });
+
+    window.addEventListener("popstate", () => {
+      const match = window.location.pathname.match(/^\/entries\/([^/]+)\/?$/);
+      if (match) {
+        open(match[1], false);
+      } else if (!root.hidden) {
+        close(false);
+      }
+    });
+
+    // Gallery cards on this page open the modal
+    document.querySelectorAll<HTMLAnchorElement>("[data-gallery-card][data-open-modal='true']").forEach((card) => {
+      card.addEventListener("click", (event) => {
+        const id = card.dataset.entryId;
+        if (!id || !entries.some((e) => e.id === id)) return;
+        event.preventDefault();
+        open(id, true);
+      });
+    });
+
+    if (root.dataset.initialId) {
+      open(root.dataset.initialId, false);
+    }
+
+    // Expose for deep-link pages that share the same root
+    (window as unknown as { __openEntryModal?: (id: string) => void }).__openEntryModal = (
+      id: string,
+    ) => open(id, true);
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-entry-modal-root]").forEach(initModalRoot);
+</script>

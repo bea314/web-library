@@ -11,111 +11,54 @@ const templates = getTemplateEntries().slice(0, 3);
 ---
 
 <BaseLayout current="home">
-  <section class="relative overflow-hidden" style="background: var(--hero-wash);">
-    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:py-24">
-      <div>
-        <p class="text-xs tracking-[0.22em] text-[var(--accent)] uppercase">
-          WEB ANALIZER
-        </p>
-        <h1 class="font-display mt-4 text-4xl font-semibold tracking-tight text-[var(--foreground)] sm:text-5xl lg:text-6xl">
-          web-library
-        </h1>
-        <p class="mt-5 max-w-xl text-base leading-relaxed text-[var(--muted-fg)] sm:text-lg">
-          Explora Features y Templates aprendidos desde la web: vista previa en
-          vivo, copia código Astro o Next.js, y el prompt para recrear desde
-          imagen o vídeo.
-        </p>
-        <div class="mt-8 flex flex-wrap gap-3">
-          <a
-            href="/features"
-            class="rounded-md bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-white transition hover:opacity-90 dark:text-[#0c1017]"
-          >
-            Ver Features
-          </a>
-          <a
-            href="/templates"
-            class="rounded-md border border-[var(--border)] bg-[var(--surface)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:border-[var(--accent)]"
-          >
-            Ver Templates
-          </a>
-        </div>
-      </div>
-
-      <div class="relative">
-        <div class="absolute -inset-4 rounded-[2rem] bg-[var(--accent-soft)] blur-2xl"></div>
-        <div class="relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-[0_24px_60px_-32px_rgba(21,32,51,0.4)]">
-          <div class="border-b border-[var(--border)] px-4 py-3 text-xs text-[var(--muted-fg)]">
-            Preview · patrón 21st.dev-like
-          </div>
-          <div class="bg-[var(--muted)] p-3">
-            <div class="rounded-xl bg-[#0b1220] px-5 py-10 text-white">
-              <p class="text-[10px] tracking-[0.2em] text-sky-300/90 uppercase">
-                Norte Studio
-              </p>
-              <p class="font-display mt-2 text-2xl font-semibold leading-tight">
-                Muestra → describe → implementa → compara
-              </p>
-              <p class="mt-2 max-w-xs text-xs text-slate-300">
-                El loop de WEB ANALIZER vive aquí como galería navegable.
-              </p>
-            </div>
-          </div>
-        </div>
+  <section class="relative overflow-hidden border-b border-[var(--border)]" style="background: var(--hero-wash);">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-18">
+      <p class="text-xs tracking-[0.22em] text-[var(--accent)] uppercase">
+        WEB ANALIZER
+      </p>
+      <h1 class="font-display mt-3 max-w-2xl text-4xl font-semibold tracking-tight text-[var(--foreground)] sm:text-5xl">
+        web-library
+      </h1>
+      <p class="mt-4 max-w-xl text-base leading-relaxed text-[var(--muted-fg)] sm:text-lg">
+        Galería de Features y Templates: escanea previews, abre el modal y copia
+        código Astro o Next.js — con el prompt para recrear desde imagen o vídeo.
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a
+          href="/features"
+          class="rounded-full bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-white transition hover:opacity-90 dark:text-[#0c1017]"
+        >
+          Features
+        </a>
+        <a
+          href="/templates"
+          class="rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:border-[var(--accent)]"
+        >
+          Templates
+        </a>
       </div>
     </div>
   </section>
 
-  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-    <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <h2 class="font-display text-2xl font-semibold tracking-tight">Features</h2>
-        <p class="mt-1 text-sm text-[var(--muted-fg)]">
-          Componentes y bloques reutilizables
-        </p>
-      </div>
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <h2 class="font-display text-xl font-semibold tracking-tight">Features</h2>
       <a href="/features" class="text-sm font-medium text-[var(--accent)] hover:underline">
-        Toda la galería →
+        Ver todas →
       </a>
     </div>
-    <EntryGrid entries={features} />
+    <EntryGrid entries={features} returnHref="/features" />
   </section>
 
   <section class="border-t border-[var(--border)] bg-[var(--surface)]">
-    <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-      <div class="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h2 class="font-display text-2xl font-semibold tracking-tight">Templates</h2>
-          <p class="mt-1 text-sm text-[var(--muted-fg)]">
-            Páginas y composiciones de referencia
-          </p>
-        </div>
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+      <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+        <h2 class="font-display text-xl font-semibold tracking-tight">Templates</h2>
         <a href="/templates" class="text-sm font-medium text-[var(--accent)] hover:underline">
-          Toda la galería →
+          Ver todas →
         </a>
       </div>
-      <EntryGrid entries={templates} />
-    </div>
-  </section>
-
-  <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
-    <div class="rounded-2xl border border-[var(--border)] bg-[var(--muted)] px-6 py-10 sm:px-10">
-      <h2 class="font-display text-2xl font-semibold tracking-tight">
-        Cómo usamos la biblioteca
-      </h2>
-      <ol class="mt-6 grid gap-4 text-sm text-[var(--muted-fg)] sm:grid-cols-3">
-        <li class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
-          <span class="font-medium text-[var(--foreground)]">1. Captura</span>
-          <p class="mt-2">Bea muestra una web (imagen o vídeo) y el agente la describe.</p>
-        </li>
-        <li class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
-          <span class="font-medium text-[var(--foreground)]">2. Implementa</span>
-          <p class="mt-2">Se añade aquí con preview + código Astro/Next.js + prompt.</p>
-        </li>
-        <li class="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
-          <span class="font-medium text-[var(--foreground)]">3. Reutiliza</span>
-          <p class="mt-2">Copia el target que necesites o refina el prompt para la próxima.</p>
-        </li>
-      </ol>
+      <EntryGrid entries={templates} returnHref="/templates" />
     </div>
   </section>
 </BaseLayout>
