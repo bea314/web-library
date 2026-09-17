@@ -92,7 +92,7 @@ const { codeAstro, codeNext, prompt } = Astro.props;
     el.setAttribute("data-toast", "");
     el.textContent = message;
     el.style.cssText =
-      "position:fixed;bottom:1.25rem;right:1.25rem;z-index:50;background:#121826;border:1px solid #243044;color:#e8eef6;padding:0.75rem 1rem;border-radius:0.5rem;font-size:0.875rem;box-shadow:0 8px 24px rgb(0 0 0 / 0.35);";
+      "position:fixed;bottom:1.25rem;right:1.25rem;z-index:50;background:var(--surface);border:1px solid var(--border);color:var(--foreground);padding:0.75rem 1rem;border-radius:0.5rem;font-size:0.875rem;box-shadow:0 8px 24px rgb(0 0 0 / 0.12);";
     document.body.appendChild(el);
     window.setTimeout(() => el.remove(), 2200);
   }

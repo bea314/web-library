@@ -1,43 +1,44 @@
 # Adding learning entries
 
-This guide explains how to add a new WEB ANALIZER learning to **web-library**.
+Guide for adding a WEB ANALIZER learning to **web-library**.
+
+## Galleries
+
+Every entry belongs to one gallery via `kind`:
+
+| `kind` | Gallery route | Use for |
+| --- | --- | --- |
+| `feature` | `/features` | Components / blocks (hero, nav, pricing card, bento…) |
+| `template` | `/templates` | Fuller pages / compositions (landing, waitlist…) |
+
+Home (`/`) surfaces a few of each; the galleries list everything.
 
 ## What every entry needs
 
 | Field | Purpose |
 | --- | --- |
-| `id` | URL-safe slug (`aurora-hero`) → `/entries/aurora-hero` |
-| `title` | Short display name |
-| `description` | One or two sentences for the grid card |
-| `category` | `hero` \| `layout` \| `pricing` \| `navigation` \| `forms` \| `other` |
-| `tags` | String array for browsing (`["hero", "cta"]`) |
-| `preview` | Key mapping to a live preview component |
-| `code.astro` | Snippet / island to reuse in **Astro** |
+| `id` | URL-safe slug → `/entries/<id>` |
+| `title` | Display name on cards and detail |
+| `description` | One or two sentences |
+| `kind` | `feature` \| `template` |
+| `category` | `hero` \| `layout` \| `pricing` \| `navigation` \| `forms` \| `page` \| `other` |
+| `tags` | Browsing hints |
+| `preview` | Key for the live preview component |
+| `code.astro` | Snippet for **Astro** |
 | `code.next` | Same pattern for **Next.js** (App Router / React TSX) |
 | `prompt` | AI prompt to recreate from image/video |
 
-The catalog UI is Astro. Stored `code.next` is a **reference target** for projects like SYVEX — not executed by this site.
+The catalog UI is Astro. Stored `code.next` is a **reference target** (e.g. SYVEX) — not executed by this site.
 
 ## Steps
 
 ### 1. Create a live preview
 
-Add an Astro component under `src/components/previews/`, e.g. `MyPatternPreview.astro`.
+Add `src/components/previews/MyPatternPreview.astro` (self-contained Tailwind). Original patterns only — do not paste proprietary UI from 21st.dev.
 
-Keep it self-contained (Tailwind classes inline). Prefer original patterns — do not paste proprietary UI from 21st.dev or similar.
+### 2. Register the preview key
 
-### 2. Extend the preview key (if new)
-
-In `src/lib/types.ts`, add the key to the `preview` union on `LearningEntry`:
-
-```ts
-preview: "aurora-hero" | "feature-bento" | "pricing-card" | "my-pattern";
-```
-
-Wire it in:
-
-- `src/components/EntryCard.astro`
-- `src/pages/entries/[id].astro`
+In `src/lib/types.ts`, extend the `preview` union. Wire it in `src/components/EntryPreview.astro`.
 
 ### 3. Append the entry
 
@@ -48,6 +49,7 @@ In `src/lib/entries.ts`:
   id: "my-pattern",
   title: "My Pattern",
   description: "What this learning teaches at a glance.",
+  kind: "feature", // or "template"
   category: "layout",
   tags: ["grid", "editorial"],
   preview: "my-pattern",
@@ -58,35 +60,24 @@ In `src/lib/entries.ts`:
 <section class="...">...</section>
 `,
     next: `export function MyPattern() {
-  return (
-    <section className="...">...</section>
-  );
+  return <section className="...">...</section>;
 }
 `,
   },
   prompt: `Describe the visual pattern so an agent can recreate it
-from a screenshot or video. Include stack, layout rules,
-palette, and what to avoid.`,
+from a screenshot or video...`,
 }
 ```
 
 ### 4. Dual-target tips
 
-- **`code.astro`**: use Astro frontmatter (`---`), HTML attrs (`class`), and optional islands only if interaction is required.
-- **`code.next`**: React function component, `className`, App Router–friendly (no Pages Router APIs). Suitable to paste into a Next.js repo like SYVEX.
-- Keep visual parity between both snippets and the live preview so comparison in the WEB ANALIZER loop stays honest.
+- **`code.astro`**: Astro frontmatter, `class`, islands only if needed.
+- **`code.next`**: React component, `className`, App Router–friendly.
+- Keep visual parity with the live preview.
 
 ### 5. Prompt quality
 
-A useful prompt usually includes:
-
-- Stack (Astro **or** Next.js + Tailwind)
-- Brand / headline / CTA copy
-- Layout constraints (full-bleed, no floating badges, one job per section)
-- Palette and typography cues
-- Explicit “do not” list (cards in hero, purple glow defaults, etc.)
-
-Refine prompts when the implementation drifts from the source image/video — that refinement is part of the library’s job.
+Include stack, brand/copy, layout rules, palette, and explicit “do not” list. Refine when the implementation drifts from the source image/video.
 
 ### 6. Verify
 
@@ -95,8 +86,9 @@ npm run build
 npm run preview
 ```
 
-Open `/` and `/entries/<id>`, switch tabs, and confirm **Copiar** works for Astro code, Next.js code, and prompt.
+Check Home, `/features` or `/templates`, and `/entries/<id>` — tabs + Copiar for Astro, Next.js, and Prompt.
 
-## Categories
+## Shell UX notes
 
-Labels (Spanish UI) live in `CATEGORY_LABELS` inside `src/lib/types.ts`. Add a category there if you introduce a new one.
+- Light theme is default; dark mode toggles via the header (persisted).
+- Do not treat the site as a dark-only docs catalog — galleries should feel browsable like a component marketplace.

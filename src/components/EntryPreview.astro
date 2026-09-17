@@ -1,0 +1,31 @@
+---
+import type { LearningEntry } from "../lib/types";
+import AuroraHeroPreview from "./previews/AuroraHeroPreview.astro";
+import FeatureBentoPreview from "./previews/FeatureBentoPreview.astro";
+import PricingCardPreview from "./previews/PricingCardPreview.astro";
+import SoftNavbarPreview from "./previews/SoftNavbarPreview.astro";
+import StudioLandingPreview from "./previews/StudioLandingPreview.astro";
+import WaitlistPagePreview from "./previews/WaitlistPagePreview.astro";
+
+interface Props {
+  preview: LearningEntry["preview"];
+}
+
+const { preview } = Astro.props;
+---
+
+{
+  preview === "aurora-hero" ? (
+    <AuroraHeroPreview />
+  ) : preview === "feature-bento" ? (
+    <FeatureBentoPreview />
+  ) : preview === "pricing-card" ? (
+    <PricingCardPreview />
+  ) : preview === "soft-navbar" ? (
+    <SoftNavbarPreview />
+  ) : preview === "studio-landing" ? (
+    <StudioLandingPreview />
+  ) : (
+    <WaitlistPagePreview />
+  )
+}

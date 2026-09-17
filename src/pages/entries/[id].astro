@@ -1,11 +1,9 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import EntryPanel from "../../components/EntryPanel.astro";
-import AuroraHeroPreview from "../../components/previews/AuroraHeroPreview.astro";
-import FeatureBentoPreview from "../../components/previews/FeatureBentoPreview.astro";
-import PricingCardPreview from "../../components/previews/PricingCardPreview.astro";
+import EntryPreview from "../../components/EntryPreview.astro";
 import { entries, getEntry } from "../../lib/entries";
-import { CATEGORY_LABELS } from "../../lib/types";
+import { CATEGORY_LABELS, KIND_LABELS } from "../../lib/types";
 
 export function getStaticPaths() {
   return entries.map((entry) => ({
@@ -19,17 +17,29 @@ const entry = getEntry(id!);
 if (!entry) {
   throw new Error(`Unknown entry id: ${id}`);
 }
+
+const backHref = entry.kind === "template" ? "/templates" : "/features";
+const backLabel = entry.kind === "template" ? "Templates" : "Features";
 ---
 
-<BaseLayout title={`${entry.title} · web-library`} description={entry.description}>
-  <div class="mx-auto min-h-screen max-w-5xl px-4 pb-20 pt-8 sm:px-6">
-    <nav class="mb-8 text-sm text-[var(--muted-fg)]">
-      <a href="/" class="hover:text-[var(--accent)]">← Biblioteca</a>
+<BaseLayout
+  title={`${entry.title} · web-library`}
+  description={entry.description}
+  current={entry.kind === "template" ? "templates" : "features"}
+>
+  <div class="mx-auto max-w-5xl px-4 pb-20 pt-8 sm:px-6">
+    <nav class="mb-8 flex flex-wrap items-center gap-2 text-sm text-[var(--muted-fg)]">
+      <a href={backHref} class="hover:text-[var(--accent)]">← {backLabel}</a>
+      <span aria-hidden="true">/</span>
+      <a href="/" class="hover:text-[var(--accent)]">Home</a>
     </nav>
 
     <header class="mb-8 max-w-2xl">
       <div class="flex flex-wrap items-center gap-2 text-xs text-[var(--muted-fg)]">
-        <span class="rounded bg-[var(--muted)] px-2 py-0.5 font-medium text-[var(--foreground)]">
+        <span class="rounded-md bg-[var(--accent-soft)] px-2 py-0.5 font-medium text-[var(--accent)]">
+          {KIND_LABELS[entry.kind]}
+        </span>
+        <span class="rounded-md bg-[var(--muted)] px-2 py-0.5 font-medium text-[var(--foreground)]">
           {CATEGORY_LABELS[entry.category]}
         </span>
         {entry.tags.map((tag) => <span>#{tag}</span>)}
@@ -43,15 +53,13 @@ if (!entry) {
     </header>
 
     <section class="mb-8">
-      <div class="mb-3 flex items-center justify-between">
+      <div class="mb-3">
         <h2 class="text-sm font-medium tracking-wide text-[var(--muted-fg)] uppercase">
           Vista previa
         </h2>
       </div>
-      <div class="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--muted)] p-3 sm:p-4">
-        {entry.preview === "aurora-hero" && <AuroraHeroPreview />}
-        {entry.preview === "feature-bento" && <FeatureBentoPreview />}
-        {entry.preview === "pricing-card" && <PricingCardPreview />}
+      <div class="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--muted)] p-3 sm:p-4">
+        <EntryPreview preview={entry.preview} />
       </div>
     </section>
 

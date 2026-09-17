@@ -1,14 +1,17 @@
 ---
 import "../styles/global.css";
+import SiteHeader from "../components/SiteHeader.astro";
 
 interface Props {
   title?: string;
   description?: string;
+  current?: "home" | "features" | "templates";
 }
 
 const {
   title = "web-library · WEB ANALIZER",
-  description = "Living web-learning library: vista previa, código Astro, código Next.js y prompt — referencias para WEB ANALIZER.",
+  description = "Biblioteca viva de learnings web: Features y Templates con vista previa, código Astro, código Next.js y prompt.",
+  current = "home",
 } = Astro.props;
 ---
 
@@ -27,9 +30,40 @@ const {
       href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script is:inline>
+      (function () {
+        try {
+          if (localStorage.getItem("web-library-theme") === "dark") {
+            document.documentElement.classList.add("dark");
+          }
+        } catch (_) {}
+      })();
+    </script>
     <title>{title}</title>
   </head>
   <body class="antialiased">
-    <slot />
+    <div class="site-shell">
+      <SiteHeader current={current} />
+      <main class="site-main">
+        <slot />
+      </main>
+      <footer class="border-t border-[var(--border)] py-8">
+        <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 text-sm text-[var(--muted-fg)] sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <p>
+            <span class="font-medium text-[var(--foreground)]">web-library</span>
+            · learnings para WEB ANALIZER
+          </p>
+          <p>
+            Shell Astro · referencias Astro + Next.js ·
+            <a
+              href="https://github.com/bea314/web-library/blob/main/docs/ADDING-ENTRIES.md"
+              class="text-[var(--accent)] underline-offset-2 hover:underline"
+            >
+              Añadir entry
+            </a>
+          </p>
+        </div>
+      </footer>
+    </div>
   </body>
 </html>

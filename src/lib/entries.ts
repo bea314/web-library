@@ -6,6 +6,7 @@ export const entries: LearningEntry[] = [
     title: "Aurora Hero",
     description:
       "Hero de pantalla completa con atmósfera en capas, marca tipográfica fuerte y CTAs mínimos.",
+    kind: "feature",
     category: "hero",
     tags: ["hero", "gradiente", "tipografía", "cta"],
     preview: "aurora-hero",
@@ -90,6 +91,7 @@ Visual: fondo oscuro (#0b1220) a pantalla completa (o min-h 70vh) con tres radia
     title: "Feature Bento",
     description:
       "Mosaico de capacidades con una historia clara: celda grande + acentos de tono.",
+    kind: "feature",
     category: "layout",
     tags: ["bento", "features", "grid", "layout"],
     preview: "feature-bento",
@@ -207,6 +209,7 @@ Fondo #0e1218. Textos cortos. Sin iconos emoji. El bento debe leerse como un mos
     title: "Pricing Card",
     description:
       "Tarjeta de precio única sobre fondo en degradé suave — interacción clara, tipografía editorial.",
+    kind: "feature",
     category: "pricing",
     tags: ["pricing", "card", "cta", "editorial"],
     preview: "pricing-card",
@@ -295,18 +298,264 @@ Paleta bosque oscuro (#1c2a24) + acento #3d6b55. Tipografía editorial, tracking
 Una sola card centrada — no grid de tres planes.
 `,
   },
+  {
+    id: "soft-navbar",
+    title: "Soft Navbar",
+    description:
+      "Barra superior clara con marca, links y CTA — bloque de navegación reutilizable.",
+    kind: "feature",
+    category: "navigation",
+    tags: ["nav", "header", "cta", "light"],
+    preview: "soft-navbar",
+    code: {
+      astro: `---
+// SoftNavbar.astro
+---
+
+<header class="border-b border-[#d7e0ec] bg-white">
+  <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-3">
+    <div class="flex items-center gap-8">
+      <a href="/" class="text-sm font-semibold tracking-tight text-[#152033]">Lumen</a>
+      <nav class="hidden gap-5 text-sm text-[#5b6b82] sm:flex">
+        <a href="#">Producto</a>
+        <a href="#">Precios</a>
+        <a href="#">Docs</a>
+      </nav>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="#" class="hidden text-sm text-[#5b6b82] sm:inline">Entrar</a>
+      <a href="#" class="rounded-md bg-[#0f766e] px-3 py-1.5 text-sm font-medium text-white">
+        Empezar
+      </a>
+    </div>
+  </div>
+</header>
+`,
+      next: `export function SoftNavbar() {
+  return (
+    <header className="border-b border-[#d7e0ec] bg-white">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-6 py-3">
+        <div className="flex items-center gap-8">
+          <a href="/" className="text-sm font-semibold tracking-tight text-[#152033]">
+            Lumen
+          </a>
+          <nav className="hidden gap-5 text-sm text-[#5b6b82] sm:flex">
+            <a href="#">Producto</a>
+            <a href="#">Precios</a>
+            <a href="#">Docs</a>
+          </nav>
+        </div>
+        <div className="flex items-center gap-3">
+          <a href="#" className="hidden text-sm text-[#5b6b82] sm:inline">
+            Entrar
+          </a>
+          <a
+            href="#"
+            className="rounded-md bg-[#0f766e] px-3 py-1.5 text-sm font-medium text-white"
+          >
+            Empezar
+          </a>
+        </div>
+      </div>
+    </header>
+  );
+}
+`,
+    },
+    prompt: `Crea una navbar clara en Astro o Next.js (App Router) + Tailwind.
+
+Marca "Lumen" a la izquierda, links Producto / Precios / Docs, "Entrar" + CTA "Empezar" teal (#0f766e).
+Fondo blanco, borde inferior sutil #d7e0ec. Sin hamburguesa animada ni glow. Tipografía compacta, altura ~48–56px. Mobile: oculta links secundarios, deja marca + CTA.
+`,
+  },
+  {
+    id: "studio-landing",
+    title: "Studio Landing",
+    description:
+      "Template de página: nav + hero de estudio + banda de clientes — referencia completa.",
+    kind: "template",
+    category: "page",
+    tags: ["landing", "hero", "nav", "template"],
+    preview: "studio-landing",
+    code: {
+      astro: `---
+const clients = ["Atelier", "Campo", "Órbita"];
+---
+
+<div class="min-h-screen bg-white text-[#152033]">
+  <header class="flex items-center justify-between border-b border-[#e8eef6] px-6 py-3 text-sm">
+    <span class="font-semibold">Norte Studio</span>
+    <nav class="hidden gap-4 text-[#5b6b82] sm:flex">
+      <a href="#">Proyectos</a>
+      <a href="#">Estudio</a>
+      <a href="#">Contacto</a>
+    </nav>
+  </header>
+  <section
+    class="px-6 py-20 text-white"
+    style="background: linear-gradient(145deg, #0b1220 0%, #16324a 55%, #1a4a3c 100%);"
+  >
+    <div class="mx-auto max-w-4xl">
+      <p class="text-xs tracking-[0.2em] text-sky-300/90 uppercase">Template</p>
+      <h1 class="mt-3 max-w-xl text-4xl font-semibold tracking-tight sm:text-5xl">
+        Landing de estudio con hero + prueba social
+      </h1>
+      <p class="mt-4 max-w-md text-base text-slate-300">
+        Una página completa de referencia: nav, hero y banda de clientes.
+      </p>
+      <a href="#" class="mt-6 inline-block rounded-md bg-sky-400 px-4 py-2 text-sm font-medium text-slate-950">
+        Ver proyectos
+      </a>
+    </div>
+  </section>
+  <section class="border-t border-[#e8eef6] bg-[#f7fafc] px-6 py-8">
+    <div class="mx-auto grid max-w-4xl grid-cols-3 gap-4 text-center text-xs tracking-wide text-[#5b6b82] uppercase">
+      {clients.map((name) => <span>{name}</span>)}
+    </div>
+  </section>
+</div>
+`,
+      next: `export function StudioLanding() {
+  const clients = ["Atelier", "Campo", "Órbita"];
+
+  return (
+    <div className="min-h-screen bg-white text-[#152033]">
+      <header className="flex items-center justify-between border-b border-[#e8eef6] px-6 py-3 text-sm">
+        <span className="font-semibold">Norte Studio</span>
+        <nav className="hidden gap-4 text-[#5b6b82] sm:flex">
+          <a href="#">Proyectos</a>
+          <a href="#">Estudio</a>
+          <a href="#">Contacto</a>
+        </nav>
+      </header>
+      <section
+        className="px-6 py-20 text-white"
+        style={{
+          background:
+            "linear-gradient(145deg, #0b1220 0%, #16324a 55%, #1a4a3c 100%)",
+        }}
+      >
+        <div className="mx-auto max-w-4xl">
+          <p className="text-xs tracking-[0.2em] text-sky-300/90 uppercase">
+            Template
+          </p>
+          <h1 className="mt-3 max-w-xl text-4xl font-semibold tracking-tight sm:text-5xl">
+            Landing de estudio con hero + prueba social
+          </h1>
+          <p className="mt-4 max-w-md text-base text-slate-300">
+            Una página completa de referencia: nav, hero y banda de clientes.
+          </p>
+          <a className="mt-6 inline-block rounded-md bg-sky-400 px-4 py-2 text-sm font-medium text-slate-950">
+            Ver proyectos
+          </a>
+        </div>
+      </section>
+      <section className="border-t border-[#e8eef6] bg-[#f7fafc] px-6 py-8">
+        <div className="mx-auto grid max-w-4xl grid-cols-3 gap-4 text-center text-xs tracking-wide text-[#5b6b82] uppercase">
+          {clients.map((name) => (
+            <span key={name}>{name}</span>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+`,
+    },
+    prompt: `Crea un template de landing completo en Astro o Next.js (App Router) + Tailwind.
+
+Estructura: navbar clara "Norte Studio" + hero full-bleed con degradé oscuro teal/azul + banda de clientes (Atelier, Campo, Órbita).
+Headline sobre landing de estudio. Un solo CTA "Ver proyectos". Sin stats flotantes ni cards en el hero. Debe sentirse como una página, no un solo bloque suelto.
+`,
+  },
+  {
+    id: "waitlist-page",
+    title: "Waitlist Page",
+    description:
+      "Template de lanzamiento: promesa corta, email y CTA — página mínima centrada.",
+    kind: "template",
+    category: "page",
+    tags: ["waitlist", "form", "landing", "template"],
+    preview: "waitlist-page",
+    code: {
+      astro: `---
+// WaitlistPage.astro
+---
+
+<main class="flex min-h-screen items-center justify-center bg-[linear-gradient(165deg,#f8fbff,#eef6f3)] px-6 py-16 text-[#152033]">
+  <section class="mx-auto max-w-lg text-center">
+    <p class="text-xs tracking-[0.2em] text-[#0f766e] uppercase">Próximo lanzamiento</p>
+    <h1 class="mt-3 text-4xl font-semibold tracking-tight">
+      Únete a la lista antes del drop
+    </h1>
+    <p class="mt-3 text-base leading-relaxed text-[#5b6b82]">
+      Template de waitlist: marca, promesa corta y formulario mínimo.
+    </p>
+    <form class="mt-8 flex overflow-hidden rounded-md border border-[#d5deeb] bg-white text-left shadow-sm">
+      <input
+        type="email"
+        placeholder="tu@email.com"
+        class="min-w-0 flex-1 px-4 py-3 text-sm outline-none"
+      />
+      <button type="submit" class="bg-[#0f766e] px-4 py-3 text-sm font-medium text-white">
+        Avisadme
+      </button>
+    </form>
+  </section>
+</main>
+`,
+      next: `export function WaitlistPage() {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[linear-gradient(165deg,#f8fbff,#eef6f3)] px-6 py-16 text-[#152033]">
+      <section className="mx-auto max-w-lg text-center">
+        <p className="text-xs tracking-[0.2em] text-[#0f766e] uppercase">
+          Próximo lanzamiento
+        </p>
+        <h1 className="mt-3 text-4xl font-semibold tracking-tight">
+          Únete a la lista antes del drop
+        </h1>
+        <p className="mt-3 text-base leading-relaxed text-[#5b6b82]">
+          Template de waitlist: marca, promesa corta y formulario mínimo.
+        </p>
+        <form className="mt-8 flex overflow-hidden rounded-md border border-[#d5deeb] bg-white text-left shadow-sm">
+          <input
+            type="email"
+            placeholder="tu@email.com"
+            className="min-w-0 flex-1 px-4 py-3 text-sm outline-none"
+          />
+          <button
+            type="submit"
+            className="bg-[#0f766e] px-4 py-3 text-sm font-medium text-white"
+          >
+            Avisadme
+          </button>
+        </form>
+      </section>
+    </main>
+  );
+}
+`,
+    },
+    prompt: `Crea un template de waitlist en Astro o Next.js (App Router) + Tailwind.
+
+Página centrada, light-first, degradé suave azul→verde. Eyebrow "Próximo lanzamiento", headline "Únete a la lista antes del drop", una frase de apoyo, formulario email + CTA "Avisadme" teal (#0f766e).
+Sin cards apiladas, sin stats, sin dark mode obligatorio. Un solo job: capturar el email.
+`,
+  },
 ];
 
 export function getEntry(id: string): LearningEntry | undefined {
   return entries.find((entry) => entry.id === id);
 }
 
-export function getEntriesByCategory(): Map<string, LearningEntry[]> {
-  const map = new Map<string, LearningEntry[]>();
-  for (const entry of entries) {
-    const list = map.get(entry.category) ?? [];
-    list.push(entry);
-    map.set(entry.category, list);
-  }
-  return map;
+export function getEntriesByKind(kind: LearningEntry["kind"]): LearningEntry[] {
+  return entries.filter((entry) => entry.kind === kind);
+}
+
+export function getFeatureEntries(): LearningEntry[] {
+  return getEntriesByKind("feature");
+}
+
+export function getTemplateEntries(): LearningEntry[] {
+  return getEntriesByKind("template");
 }

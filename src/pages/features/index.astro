@@ -1,0 +1,29 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import EntryGrid from "../../components/EntryGrid.astro";
+import { getFeatureEntries } from "../../lib/entries";
+
+const features = getFeatureEntries();
+---
+
+<BaseLayout
+  current="features"
+  title="Features · web-library"
+  description="Galería de Features (componentes y bloques) con vista previa y código Astro / Next.js."
+>
+  <section class="border-b border-[var(--border)]" style="background: var(--hero-wash);">
+    <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <p class="text-xs tracking-[0.2em] text-[var(--accent)] uppercase">Galería</p>
+      <h1 class="font-display mt-3 text-4xl font-semibold tracking-tight">Features</h1>
+      <p class="mt-3 max-w-2xl text-[var(--muted-fg)]">
+        Bloques y componentes aprendidos — hero, layouts, pricing, navegación.
+        Abre una tarjeta para vista previa y copiar Código Astro, Código Next.js o Prompt.
+      </p>
+      <p class="mt-4 text-sm text-[var(--muted-fg)]">{features.length} features</p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+    <EntryGrid entries={features} />
+  </section>
+</BaseLayout>

@@ -1,6 +1,28 @@
 @import "tailwindcss";
 
 :root {
+  --background: #f4f7fb;
+  --foreground: #152033;
+  --surface: #ffffff;
+  --muted: #e8eef6;
+  --muted-fg: #5b6b82;
+  --border: #d5deeb;
+  --accent: #0f766e;
+  --accent-soft: rgba(15, 118, 110, 0.12);
+  --code-fg: #243247;
+  --hero-wash: linear-gradient(
+    135deg,
+    #eef6ff 0%,
+    #f7fbff 42%,
+    #eaf8f4 78%,
+    #f8f4ef 100%
+  );
+  --font-display: "Fraunces", Georgia, serif;
+  --font-sans: "Source Sans 3", "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+
+html.dark {
   --background: #0c1017;
   --foreground: #e8eef6;
   --surface: #121826;
@@ -8,9 +30,20 @@
   --muted-fg: #93a0b5;
   --border: #243044;
   --accent: #5ec8a7;
+  --accent-soft: rgba(94, 200, 167, 0.14);
   --code-fg: #c9d4e5;
-  --font-display: "Fraunces", Georgia, serif;
-  --font-sans: "Source Sans 3", "Segoe UI", sans-serif;
+  --hero-wash: radial-gradient(
+      ellipse 90% 50% at 10% -10%,
+      rgba(94, 200, 167, 0.14),
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse 70% 40% at 95% 0%,
+      rgba(94, 156, 232, 0.12),
+      transparent 45%
+    ),
+    #0c1017;
+  color-scheme: dark;
 }
 
 * {
@@ -26,10 +59,7 @@ body {
   min-height: 100vh;
   font-family: var(--font-sans);
   color: var(--foreground);
-  background:
-    radial-gradient(ellipse 90% 50% at 10% -10%, rgba(94, 200, 167, 0.14), transparent 50%),
-    radial-gradient(ellipse 70% 40% at 95% 0%, rgba(94, 156, 232, 0.12), transparent 45%),
-    var(--background);
+  background: var(--background);
 }
 
 a {
@@ -38,9 +68,19 @@ a {
 }
 
 ::selection {
-  background: rgba(94, 200, 167, 0.35);
+  background: var(--accent-soft);
 }
 
 .font-display {
   font-family: var(--font-display);
+}
+
+.site-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-main {
+  flex: 1;
 }
