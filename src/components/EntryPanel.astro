@@ -1,0 +1,151 @@
+---
+interface Props {
+  codeAstro: string;
+  codeNext: string;
+  prompt: string;
+}
+
+const { codeAstro, codeNext, prompt } = Astro.props;
+---
+
+<div class="entry-panel overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)]" data-entry-panel>
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] px-4 py-3">
+    <div class="flex flex-wrap gap-1 rounded-lg bg-[var(--muted)] p-1" role="tablist">
+      <button
+        type="button"
+        role="tab"
+        data-tab="astro"
+        aria-selected="true"
+        class="tab-btn is-active rounded-md px-3 py-1.5 text-sm font-medium transition"
+      >
+        Código Astro
+      </button>
+      <button
+        type="button"
+        role="tab"
+        data-tab="next"
+        aria-selected="false"
+        class="tab-btn rounded-md px-3 py-1.5 text-sm font-medium transition"
+      >
+        Código Next.js
+      </button>
+      <button
+        type="button"
+        role="tab"
+        data-tab="prompt"
+        aria-selected="false"
+        class="tab-btn rounded-md px-3 py-1.5 text-sm font-medium transition"
+      >
+        Prompt
+      </button>
+    </div>
+    <button
+      type="button"
+      data-copy
+      class="inline-flex items-center gap-2 rounded-md border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-sm font-medium transition hover:border-[var(--accent)] hover:text-[var(--accent)]"
+    >
+      <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+      </svg>
+      <span data-copy-label>Copiar código</span>
+    </button>
+  </div>
+
+  <pre data-pane="astro" class="pane max-h-[480px] overflow-auto p-4 text-[13px] leading-relaxed text-[var(--code-fg)]"><code>{codeAstro}</code></pre>
+  <pre data-pane="next" class="pane hidden max-h-[480px] overflow-auto p-4 text-[13px] leading-relaxed text-[var(--code-fg)]"><code>{codeNext}</code></pre>
+  <pre data-pane="prompt" class="pane hidden max-h-[480px] overflow-auto p-4 text-[13px] leading-relaxed text-[var(--code-fg)]"><code>{prompt}</code></pre>
+
+  <!-- Hidden sources for clipboard (avoids script/JSON escaping issues) -->
+  <textarea class="sr-only" aria-hidden="true" data-source="astro" readonly>{codeAstro}</textarea>
+  <textarea class="sr-only" aria-hidden="true" data-source="next" readonly>{codeNext}</textarea>
+  <textarea class="sr-only" aria-hidden="true" data-source="prompt" readonly>{prompt}</textarea>
+</div>
+
+<style>
+  .tab-btn {
+    color: var(--muted-fg);
+  }
+  .tab-btn.is-active {
+    background: var(--surface);
+    color: var(--foreground);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
+
+<script>
+  function showToast(message: string) {
+    const existing = document.querySelector("[data-toast]");
+    existing?.remove();
+    const el = document.createElement("div");
+    el.setAttribute("data-toast", "");
+    el.textContent = message;
+    el.style.cssText =
+      "position:fixed;bottom:1.25rem;right:1.25rem;z-index:50;background:var(--surface);border:1px solid var(--border);color:var(--foreground);padding:0.75rem 1rem;border-radius:0.5rem;font-size:0.875rem;box-shadow:0 8px 24px rgb(0 0 0 / 0.12);";
+    document.body.appendChild(el);
+    window.setTimeout(() => el.remove(), 2200);
+  }
+
+  function initPanel(panel: HTMLElement) {
+    let active: "astro" | "next" | "prompt" = "astro";
+    const labels = {
+      astro: "Copiar código",
+      next: "Copiar código",
+      prompt: "Copiar prompt",
+    } as const;
+
+    const tabs = panel.querySelectorAll<HTMLButtonElement>("[data-tab]");
+    const panes = panel.querySelectorAll<HTMLElement>("[data-pane]");
+    const copyBtn = panel.querySelector<HTMLButtonElement>("[data-copy]");
+    const copyLabel = panel.querySelector("[data-copy-label]");
+
+    function getValue(key: "astro" | "next" | "prompt") {
+      const source = panel.querySelector<HTMLTextAreaElement>(
+        `[data-source="${key}"]`,
+      );
+      return source?.value ?? "";
+    }
+
+    function setTab(next: "astro" | "next" | "prompt") {
+      active = next;
+      tabs.forEach((tab) => {
+        const isActive = tab.dataset.tab === next;
+        tab.classList.toggle("is-active", isActive);
+        tab.setAttribute("aria-selected", String(isActive));
+      });
+      panes.forEach((pane) => {
+        pane.classList.toggle("hidden", pane.dataset.pane !== next);
+      });
+      if (copyLabel) copyLabel.textContent = labels[next];
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        const id = tab.dataset.tab as "astro" | "next" | "prompt";
+        setTab(id);
+      });
+    });
+
+    copyBtn?.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(getValue(active));
+        showToast("Copiado al portapapeles");
+      } catch {
+        showToast("No se pudo copiar");
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLElement>("[data-entry-panel]").forEach(initPanel);
+</script>

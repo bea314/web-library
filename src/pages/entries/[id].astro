@@ -1,0 +1,57 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import EntryGrid from "../../components/EntryGrid.astro";
+import EntryModal from "../../components/EntryModal.astro";
+import { entries, getEntry, getEntriesByKind } from "../../lib/entries";
+
+export function getStaticPaths() {
+  return entries.map((entry) => ({
+    params: { id: entry.id },
+  }));
+}
+
+const { id } = Astro.params;
+const entry = getEntry(id!);
+
+if (!entry) {
+  throw new Error(`Unknown entry id: ${id}`);
+}
+
+const siblings = getEntriesByKind(entry.kind);
+const returnHref = entry.kind === "template" ? "/templates" : "/features";
+---
+
+<BaseLayout
+  title={`${entry.title} · web-library`}
+  description={entry.description}
+  current={entry.kind === "template" ? "templates" : "features"}
+>
+  <!-- Gallery backdrop under the modal (same chrome as Features/Templates) -->
+  <section class="border-b border-[var(--border)] bg-[var(--surface)]">
+    <div class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <div class="flex flex-wrap items-end justify-between gap-3">
+        <div>
+          <h1 class="font-display text-3xl font-semibold tracking-tight">
+            {entry.kind === "template" ? "Templates" : "Features"}
+          </h1>
+          <p class="mt-1 text-sm text-[var(--muted-fg)]">
+            {entry.title} · vista previa en modal
+          </p>
+        </div>
+        <a href={returnHref} class="text-sm text-[var(--accent)] hover:underline">
+          Volver a la galería
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
+    <EntryGrid
+      entries={siblings}
+      returnHref={returnHref}
+      withModal={false}
+    />
+  </section>
+
+  <EntryModal entries={siblings} initialId={entry.id} returnHref={returnHref} />
+</BaseLayout>

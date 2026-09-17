@@ -1,0 +1,64 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import EntryGrid from "../components/EntryGrid.astro";
+import {
+  getFeatureEntries,
+  getTemplateEntries,
+} from "../lib/entries";
+
+const features = getFeatureEntries().slice(0, 3);
+const templates = getTemplateEntries().slice(0, 3);
+---
+
+<BaseLayout current="home">
+  <section class="relative overflow-hidden border-b border-[var(--border)]" style="background: var(--hero-wash);">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:py-18">
+      <p class="text-xs tracking-[0.22em] text-[var(--accent)] uppercase">
+        WEB ANALIZER
+      </p>
+      <h1 class="font-display mt-3 max-w-2xl text-4xl font-semibold tracking-tight text-[var(--foreground)] sm:text-5xl">
+        web-library
+      </h1>
+      <p class="mt-4 max-w-xl text-base leading-relaxed text-[var(--muted-fg)] sm:text-lg">
+        Galería de Features y Templates: escanea previews, abre el modal y copia
+        código Astro o Next.js — con el prompt para recrear desde imagen o vídeo.
+      </p>
+      <div class="mt-7 flex flex-wrap gap-3">
+        <a
+          href="/features"
+          class="rounded-full bg-[var(--accent)] px-4 py-2.5 text-sm font-medium text-white transition hover:opacity-90 dark:text-[#0c1017]"
+        >
+          Features
+        </a>
+        <a
+          href="/templates"
+          class="rounded-full border border-[var(--border)] bg-[var(--surface)] px-4 py-2.5 text-sm font-medium text-[var(--foreground)] transition hover:border-[var(--accent)]"
+        >
+          Templates
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+    <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <h2 class="font-display text-xl font-semibold tracking-tight">Features</h2>
+      <a href="/features" class="text-sm font-medium text-[var(--accent)] hover:underline">
+        Ver todas →
+      </a>
+    </div>
+    <EntryGrid entries={features} returnHref="/features" />
+  </section>
+
+  <section class="border-t border-[var(--border)] bg-[var(--surface)]">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+      <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+        <h2 class="font-display text-xl font-semibold tracking-tight">Templates</h2>
+        <a href="/templates" class="text-sm font-medium text-[var(--accent)] hover:underline">
+          Ver todas →
+        </a>
+      </div>
+      <EntryGrid entries={templates} returnHref="/templates" />
+    </div>
+  </section>
+</BaseLayout>
