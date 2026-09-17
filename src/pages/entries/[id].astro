@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import EntryPanel from "../../components/EntryPanel.astro";
+import AuroraHeroPreview from "../../components/previews/AuroraHeroPreview.astro";
+import FeatureBentoPreview from "../../components/previews/FeatureBentoPreview.astro";
+import PricingCardPreview from "../../components/previews/PricingCardPreview.astro";
+import { entries, getEntry } from "../../lib/entries";
+import { CATEGORY_LABELS } from "../../lib/types";
+
+export function getStaticPaths() {
+  return entries.map((entry) => ({
+    params: { id: entry.id },
+  }));
+}
+
+const { id } = Astro.params;
+const entry = getEntry(id!);
+
+if (!entry) {
+  throw new Error(`Unknown entry id: ${id}`);
+}
+---
+
+<BaseLayout title={`${entry.title} · web-library`} description={entry.description}>
+  <div class="mx-auto min-h-screen max-w-5xl px-4 pb-20 pt-8 sm:px-6">
+    <nav class="mb-8 text-sm text-[var(--muted-fg)]">
+      <a href="/" class="hover:text-[var(--accent)]">← Biblioteca</a>
+    </nav>
+
+    <header class="mb-8 max-w-2xl">
+      <div class="flex flex-wrap items-center gap-2 text-xs text-[var(--muted-fg)]">
+        <span class="rounded bg-[var(--muted)] px-2 py-0.5 font-medium text-[var(--foreground)]">
+          {CATEGORY_LABELS[entry.category]}
+        </span>
+        {entry.tags.map((tag) => <span>#{tag}</span>)}
+      </div>
+      <h1 class="font-display mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+        {entry.title}
+      </h1>
+      <p class="mt-3 text-base leading-relaxed text-[var(--muted-fg)]">
+        {entry.description}
+      </p>
+    </header>
+
+    <section class="mb-8">
+      <div class="mb-3 flex items-center justify-between">
+        <h2 class="text-sm font-medium tracking-wide text-[var(--muted-fg)] uppercase">
+          Vista previa
+        </h2>
+      </div>
+      <div class="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--muted)] p-3 sm:p-4">
+        {entry.preview === "aurora-hero" && <AuroraHeroPreview />}
+        {entry.preview === "feature-bento" && <FeatureBentoPreview />}
+        {entry.preview === "pricing-card" && <PricingCardPreview />}
+      </div>
+    </section>
+
+    <section>
+      <EntryPanel
+        codeAstro={entry.code.astro}
+        codeNext={entry.code.next}
+        prompt={entry.prompt}
+      />
+    </section>
+  </div>
+</BaseLayout>

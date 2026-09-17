@@ -1,0 +1,44 @@
+---
+import type { LearningEntry } from "../lib/types";
+import { CATEGORY_LABELS } from "../lib/types";
+import AuroraHeroPreview from "./previews/AuroraHeroPreview.astro";
+import FeatureBentoPreview from "./previews/FeatureBentoPreview.astro";
+import PricingCardPreview from "./previews/PricingCardPreview.astro";
+
+interface Props {
+  entry: LearningEntry;
+}
+
+const { entry } = Astro.props;
+---
+
+<a
+  href={`/entries/${entry.id}`}
+  class="group block overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--surface)] transition hover:border-[var(--accent)]/50"
+>
+  <div class="pointer-events-none border-b border-[var(--border)] bg-[var(--muted)] p-3">
+    {
+      entry.preview === "aurora-hero" && <AuroraHeroPreview />
+    }
+    {
+      entry.preview === "feature-bento" && <FeatureBentoPreview />
+    }
+    {
+      entry.preview === "pricing-card" && <PricingCardPreview />
+    }
+  </div>
+  <div class="flex flex-col gap-2 p-4">
+    <div class="flex items-center gap-2 text-xs text-[var(--muted-fg)]">
+      <span class="rounded bg-[var(--muted)] px-2 py-0.5 font-medium text-[var(--foreground)]">
+        {CATEGORY_LABELS[entry.category]}
+      </span>
+      <span class="truncate">{entry.tags.slice(0, 3).join(" · ")}</span>
+    </div>
+    <h3 class="font-display text-lg font-semibold tracking-tight text-[var(--foreground)] group-hover:text-[var(--accent)]">
+      {entry.title}
+    </h3>
+    <p class="text-sm leading-relaxed text-[var(--muted-fg)]">
+      {entry.description}
+    </p>
+  </div>
+</a>

@@ -1,0 +1,63 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import EntryCard from "../components/EntryCard.astro";
+import { entries, getEntriesByCategory } from "../lib/entries";
+import { CATEGORY_LABELS, type EntryCategory } from "../lib/types";
+
+const byCategory = getEntriesByCategory();
+const categoryOrder = Array.from(byCategory.keys()) as EntryCategory[];
+---
+
+<BaseLayout>
+  <div class="mx-auto min-h-screen max-w-6xl px-4 pb-20 pt-10 sm:px-6">
+    <header class="mb-14 max-w-3xl">
+      <p class="text-xs tracking-[0.22em] text-[var(--accent)] uppercase">
+        WEB ANALIZER
+      </p>
+      <h1 class="font-display mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
+        web-library
+      </h1>
+      <p class="mt-4 text-base leading-relaxed text-[var(--muted-fg)] sm:text-lg">
+        Biblioteca viva de learnings web: muestra una página, el agente la
+        describe, se implementa aquí, se compara con la fuente y se acumula como
+        referencia — con <strong class="font-medium text-[var(--foreground)]">vista previa</strong>,
+        <strong class="font-medium text-[var(--foreground)]">código Astro</strong>,
+        <strong class="font-medium text-[var(--foreground)]">código Next.js</strong>
+        y <strong class="font-medium text-[var(--foreground)]">prompt</strong>.
+      </p>
+      <p class="mt-3 text-sm text-[var(--muted-fg)]">
+        {entries.length} entradas · el catálogo es Astro (estático); cada learning
+        guarda variantes para reutilizar en Astro o Next.js (p. ej. SYVEX) ·
+        <a
+          href="https://github.com/bea314/web-library/blob/main/docs/ADDING-ENTRIES.md"
+          class="text-[var(--accent)] underline-offset-2 hover:underline"
+        >
+          Cómo añadir un learning
+        </a>
+      </p>
+    </header>
+
+    <div class="flex flex-col gap-14">
+      {
+        categoryOrder.map((category) => {
+          const list = byCategory.get(category) ?? [];
+          return (
+            <section id={category}>
+              <div class="mb-5 flex items-end justify-between gap-4">
+                <h2 class="font-display text-2xl font-semibold tracking-tight">
+                  {CATEGORY_LABELS[category]}
+                </h2>
+                <span class="text-sm text-[var(--muted-fg)]">{list.length}</span>
+              </div>
+              <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {list.map((entry) => (
+                  <EntryCard entry={entry} />
+                ))}
+              </div>
+            </section>
+          );
+        })
+      }
+    </div>
+  </div>
+</BaseLayout>

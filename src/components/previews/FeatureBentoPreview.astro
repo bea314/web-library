@@ -1,0 +1,51 @@
+---
+const items = [
+  {
+    title: "Señal clara",
+    body: "Una columna ancha para la idea principal del producto.",
+    span: "sm:col-span-2 sm:row-span-2",
+    tone: "bg-[#12261f] text-[#d8f3e4]",
+  },
+  {
+    title: "Ritmo",
+    body: "Bloques cortos que marcan contraste.",
+    span: "",
+    tone: "bg-[#1a2332] text-[#c5d4e8]",
+  },
+  {
+    title: "Detalle",
+    body: "Un acento tipográfico y color local.",
+    span: "",
+    tone: "bg-[#2a2118] text-[#f3e6d4]",
+  },
+  {
+    title: "Flujo",
+    body: "El bento guía la mirada sin cards con sombra.",
+    span: "sm:col-span-2",
+    tone: "bg-[#1e1a28] text-[#e4dcef]",
+  },
+];
+---
+
+<div class="rounded-xl bg-[#0e1218] p-4 sm:p-6">
+  <div class="mb-5 flex flex-col gap-1 px-1">
+    <p class="font-display text-xs tracking-[0.18em] text-emerald-400/90 uppercase">
+      Capacidades
+    </p>
+    <h2 class="font-display text-2xl font-semibold text-white">
+      Un mosaico con una sola historia
+    </h2>
+  </div>
+  <div class="grid auto-rows-[minmax(100px,auto)] grid-cols-1 gap-3 sm:grid-cols-3">
+    {
+      items.map((item) => (
+        <article
+          class={`flex flex-col justify-between rounded-lg p-5 ${item.tone} ${item.span}`}
+        >
+          <h3 class="font-display text-lg font-semibold">{item.title}</h3>
+          <p class="mt-3 text-sm leading-relaxed opacity-85">{item.body}</p>
+        </article>
+      ))
+    }
+  </div>
+</div>
